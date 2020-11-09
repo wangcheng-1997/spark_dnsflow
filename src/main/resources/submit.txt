@@ -1,0 +1,189 @@
+##DNS读取HDFS启动脚本
+--driver-java-options "-Dlog4j.configuration=file:/home/jar/dnsflow/log4j.properties" \
+--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=file:/home/jar/dnsflow/log4j.properties" \
+
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.DnsRpt \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 15 \
+--executor-memory 8G \
+--executor-cores 4 \
+--driver-memory 8G \
+--queue DNS_Analysis \
+--conf spark.driver.cores=4 \
+--conf spark.yarn.maxAppAttempts=4 \
+--conf spark.yarn.am.attemptFailuresValidityInterval=1h \
+--conf spark.yarn.max.executor.failures=60 \
+--conf spark.yarn.executor.failuresValidityInterval=1h \
+--conf spark.task.maxFailures=8 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf spark.defalut.parallelism=180 \
+--conf spark.yarn.executor.memoryOverhead=1024 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval-ms=6000 \
+--conf spark.rdd.compress=true \
+--driver-class-path /home/jar/dnsflow \
+/home/jar/dnsflow/spark-dnsflow-1.0-SNAPSHOT.jar
+
+
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.DnsRptOffline \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 15 \
+--executor-memory 8G \
+--executor-cores 4 \
+--driver-memory 8G \
+--queue DNS_Analysis \
+--conf spark.driver.cores=4 \
+--conf spark.yarn.maxAppAttempts=4 \
+--conf spark.yarn.am.attemptFailuresValidityInterval=1h \
+--conf spark.yarn.max.executor.failures=60 \
+--conf spark.yarn.executor.failuresValidityInterval=1h \
+--conf spark.task.maxFailures=8 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf sp1591231709ark.defalut.parallelism=180 \
+--conf spark.yarn.executor.memoryOverhead=1024 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval-ms=6000 \
+--conf spark.rdd.compress=true \
+--driver-class-path /home/jar/dnsflow \
+/home/jar/dnsflow/spark-dnsflow-1.0-SNAPSHOT.jar 1590337200000 1590337200000
+
+
+
+#用户活跃度
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.LivenessRpt \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 30 \
+--executor-memory 8G \
+--executor-cores 4 \
+--driver-memory 8G \
+--queue DNS_Analysis \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.driver.cores=4 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf spark.core.connection.ack.wait.timeout=300 \
+--conf spark.defalut.parallelism=360 \
+--conf spark.yarn.executor.memoryOverhead=2048 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval-ms=6000 \
+--conf spark.rdd.compress=true \
+--driver-class-path /home/jar/liveness \
+/home/jar/liveness/spark-dnsflow-1.0-SNAPSHOT.jar \
+20200304
+
+# dns_flow_top 聚合
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.ESDnsFTP \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 15 \
+--executor-memory 4G \
+--executor-cores 4 \
+--driver-memory 4G \
+--queue DNS_Analysis \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.driver.cores=4 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf spark.core.connection.ack.wait.timeout=300 \
+--conf spark.default.parallelism=360 \
+--conf spark.yarn.executor.memoryOverhead=2048 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval-ms=6000 \
+--conf spark.rdd.compress=true \
+--driver-class-path /home/jar/dnsflow \
+/home/jar/dnsflow/spark-dnsflow-1.0-SNAPSHOT.jar \
+dd
+
+# dns_flow_clear 聚合
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.ESDnsClear\
+--master yarn \
+--deploy-mode cluster \
+--num-executors 15 \
+--executor-memory 4G \
+--executor-cores 4 \
+--driver-memory 4G \
+--queue off_task \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.driver.cores=4 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf spark.core.connection.ack.wait.timeout=300 \
+--conf spark.default.parallelism=360 \
+--conf spark.yarn.executor.memoryOverhead=2048 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval-ms=6000 \
+--conf spark.rdd.compress=true \
+--driver-class-path /home/jar/dnsflow \
+/home/jar/dnsflow/spark-dnsflow-1.0-SNAPSHOT.jar \
+
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit \
+--class com.zjtuojing.dnsflow.ESRatioTransport \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 8 \
+--executor-memory 4G \
+--executor-cores 2 \
+--driver-memory 4G \
+--queue off_task \
+--conf spark.driver.cores=4 \
+--conf spark.yarn.maxAppAttempts=4 \
+--conf spark.yarn.am.attemptFailuresValidityInterval=1h \
+--conf spark.yarn.max.executor.failures=60 \
+--conf spark.yarn.executor.failuresValidityInterval=1h \
+--conf spark.task.maxFailures=8 \
+--conf spark.network.timeout=500 \
+--conf spark.executor.heartbeatInterval=60s \
+--conf spark.defalut.parallelism=180 \
+--conf spark.yarn.executor.memoryOverhead=1024 \
+--conf spark.dynamicAllocation.enabled=false \
+--conf spark.yarn.scheduler.heartbeat.interval.ms=6000 \
+--conf spark.rdd.compress=true \
+--conf spark.speculation=true \
+--conf spark.speculation.interval=300s \
+--conf spark.speculation.quantile=0.9 \
+--conf spark.speculation.multiplier=1.5 \
+--files /home/application_yarn/config/config.properties \
+/tmp/spark-dnsflow-1.0-SNAPSHOT.jar
+
+
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit  \
+--class com.zjtuojing.dnsflow.ImportData  \
+--master yarn  \
+--deploy-mode cluster  \
+--num-executors 8  \
+--executor-memory 8G  \
+--executor-cores 4  \
+--driver-memory 4G  \
+--queue off_task  \
+--conf spark.driver.cores=2  \
+--conf spark.yarn.maxAppAttempts=4  \
+--conf spark.yarn.am.attemptFailuresValidityInterval=1h  \
+--conf spark.yarn.max.executor.failures=60  \
+--conf spark.yarn.executor.failuresValidityInterval=1h  \
+--conf spark.task.maxFailures=10  \
+--conf spark.network.timeout=500  \
+--conf spark.executor.heartbeatInterval=60s  \
+--conf spark.default.parallelism=180  \
+--conf spark.yarn.executor.memoryOverhead=1024  \
+--conf spark.dynamicAllocation.enabled=false  \
+--conf spark.yarn.scheduler.heartbeat.interval.ms=6000  \
+--conf spark.rdd.compress=true  \
+--conf spark.speculation=true  \
+--conf spark.speculation.interval=5s  \
+--conf spark.speculation.quantile=0.9  \
+--conf spark.speculation.multiplier=1.5  \
+--files /home/application_yarn/config/config.properties  \
+--driver-class-path /home/application_yarn/jar  \
+/tmp/1/spark-dnsflow-1.0-SNAPSHOT.jar
+
+/opt/cloudera/parcels/SPARK2-2.1.0.cloudera1-1.cdh5.7.0.p0.120904/bin/spark2-submit  --class com.zjtuojing.dnsflow.ImportData  --master yarn  --deploy-mode cluster  --num-executors 8  --executor-memory 8G  --executor-cores 4  --driver-memory 4G  --queue off_task  --conf spark.driver.cores=2  --conf spark.yarn.maxAppAttempts=1  --conf spark.yarn.am.attemptFailuresValidityInterval=1h  --conf spark.yarn.max.executor.failures=60  --conf spark.yarn.executor.failuresValidityInterval=1h  --conf spark.task.maxFailures=10  --conf spark.network.timeout=500  --conf spark.executor.heartbeatInterval=60s  --conf spark.default.parallelism=64  --conf spark.yarn.executor.memoryOverhead=1024  --conf spark.dynamicAllocation.enabled=false  --conf spark.yarn.scheduler.heartbeat.interval.ms=6000  --conf spark.rdd.compress=true  --conf spark.speculation=true  --conf spark.speculation.interval=5s  --conf spark.speculation.quantile=0.9  --conf spark.speculation.multiplier=1.5  --files /home/application_yarn/config/config.properties  --driver-class-path /home/application_yarn/jar  /tmp/1/spark-dnsflow-1.0-SNAPSHOT.jar 1601155800 1601161500
